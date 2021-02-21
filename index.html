@@ -89,7 +89,13 @@
         document.getElementById("recordIDcontainer").style.display = "none";
         let url = document.getElementById("endpoint").value;
         fetch(url)
-        .then(response=>response.json())
+        .then(response => {
+            if (!response.ok) {
+              document.getElementById("output").innerHTML = 'Error: ' + response.status + " " + response.statusText;
+              throw new Error(response.status)
+            }
+            return response.json();
+        })
         .then(data => {
           for (const i of data) {
             document.getElementById("output").innerHTML += JSON.stringify(i);
@@ -152,7 +158,13 @@
               "Content-type": "application/json"
             }  
           })
-          .then(response=>response.json())
+          .then(response => {
+            if (!response.ok) {
+              document.getElementById("output").innerHTML = 'Error: ' + response.status + " " + response.statusText;
+              throw new Error(response.status)
+            }
+            return response.json();
+          })
           .then(data=> {
               document.getElementById("output").innerHTML = JSON.stringify(data);
           })
@@ -229,6 +241,9 @@
         })
         .then(data=> {
             document.getElementById("output").innerHTML = JSON.stringify(data);
+        })
+        .catch((error) => {
+            console.error(error);
         });
       }
 
